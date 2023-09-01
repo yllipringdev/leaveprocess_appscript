@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <title>Approval Form</title>
+</head>
+<style>
+.main_header {
+    margin: auto;
+    float: none;
+    display: table;
+    margin-top: 3%;
+}
+label {
+    font-family: sans-serif;
+    font-weight: 400;
+    font-size: 12pt;
+    line-height: 3;
+    letter-spacing: 0;
+}
+  input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12pt;
+    line-height: 1.5;
+    font-weight: bold;
+  }
+
+  textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12pt;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+form#approvalForm {
+    display: grid;
+    width: 50%;
+    margin: auto;
+}
+  h1 {
+    margin: auto;
+    float: none;
+    display: table;
+    margin-bottom: 3%;
+    margin-top: 5%;
+}
+
+.flex-parent {
+  display: flex;
+  margin-top: 50px;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+button.margin-right {
+  margin-right: 40px;
+}
+
+button.margin-top {
+  margin-top: 50px;
+}
+
+
+
+  button {
+    padding: 10px 20px;
+    font-size: 14pt;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px; /* Add some margin to separate the buttons */
+  }
+
+  #approveButton {
+    background-color: #D2FCDD;
+    color: green;
+  }
+  #denyButton {
+    background-color: #FAD6D4;
+    color: red;
+    padding: 10px 33px;
+  }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  form#approvalForm {
+    width: 90%;
+  }
+
+  .flex-parent {
+    display: flex;
+    margin-top: 5%;
+    margin-bottom: 45%;
+    height: 46px;
+}
+
+  body {
+      overflow: scroll;
+  }
+
+  /* Adjust label styles for smaller screens */
+  label {
+    font-size: 10pt;
+    line-height: 2;
+  }
+
+  /* Adjust input styles for smaller screens */
+  input[type="text"] {
+    font-size: 10pt;
+    line-height: 1.3;
+  }
+
+  /* Adjust button styles for smaller screens */
+  button {
+    font-size: 12pt;
+    padding: 8px 16px;
+  }
+}
+</style>
+<body>
+  <div class="main_header">
+    <img src="https://i.ibb.co/VtQqL6P/spaxel-icon-black.png" alt="Logo" style="height: auto; width: 150px;">
+  </div>
+  <h1>
+    Approval Form
+  </h1>
+  <form id="approvalForm" onsubmit="submitForm(event)">
+    <label style="display: none" for="formId">Form ID :</label>
+    <input style="display: none" type="text" id="formId" name="formId" value="<?= responseId ?>">
+    <label for="employeeemail">Employee Email :</label>
+    <input type="text" id="employeeemail" name="employeeemail" value="<?= employeeemail ?>">
+    <label for="position">Position :</label>
+    <input type="text" id="position" name="position" value="<?= position ?>">
+    <label for="department">Department :</label>
+    <input type="text" id="department" name="department" value="<?= department ?>">
+    <label for="leave_type">Leave type :</label>
+    <input type="text" id="leave_type" name="leave_type" value="<?= leave_type ?>">
+    <label for="datefrom">Date from :</label>
+    <input type="text" id="datefrom" name="datefrom" value="<?= datefrom ?>">
+    <label for="dateto">Date to :</label>
+    <input type="text" id="dateto" name="dateto" value="<?= dateto ?>">
+    <label for="reason">Reason (Only fill if you don't want to approve):</label>
+    <textarea id="reason" name="reason" rows="4"></textarea>
+    <!-- <input type="submit" value="Submit"> -->
+  </form>
+
+  <div class="flex-parent jc-center">
+    <button id="approveButton" onclick="approveForm()">Approve</button>
+    <button id="denyButton" onclick="denyForm()">Deny</button>
+  </div>
+  <script>
+  function approveForm() {
+    const formId = document.getElementById('formId').value.trim();
+    if (formId === '') {
+      alert('Please submit the form first to get the ID.');
+      return;
+    }
+
+    // Call the Google Apps Script function to approve the form (you may already have this)
+    google.script.run.approveForm(formId);
+
+    // Hide the approval form and buttons
+    const approvalForm = document.getElementById('approvalForm');
+    approvalForm.style.display = 'none';
+    const buttons = document.querySelector('.flex-parent');
+    buttons.style.display = 'none';
+
+    // Show the message "Thanks for approving"
+    const messageElement = document.createElement('h1');
+    messageElement.textContent = 'Thanks for approving!';
+    messageElement.style.textAlign = 'center'; // Center align the text
+    messageElement.style.marginTop = '10%'; // Adjust the top margin as needed
+    document.body.appendChild(messageElement);
+
+    // Change the URL location to www.spaxel.com after 3 seconds
+    setTimeout(() => {
+      window.location.href = 'https://www.spaxel.com';
+    }, 3000);
+  }
+
+  function denyForm() {
+    const formId = document.getElementById('formId').value.trim();
+    if (formId === '') {
+      alert('Please submit the form first to get the ID.');
+      return;
+    }
+    const reason = document.getElementById('reason').value.trim();
+
+    // Implement the denial action if needed
+    google.script.run.denyFormins(formId,reason);
+
+    // Hide the approval form and buttons
+    const approvalForm = document.getElementById('approvalForm');
+    approvalForm.style.display = 'none';
+    const buttons = document.querySelector('.flex-parent');
+    buttons.style.display = 'none';
+
+    // Show the message "Thanks for declining"
+    const messageElement = document.createElement('h1');
+    messageElement.textContent = 'Thanks for declining!';
+    messageElement.style.textAlign = 'center'; // Center align the text
+    messageElement.style.marginTop = '10%'; // Adjust the top margin as needed
+    document.body.appendChild(messageElement);
+
+    // Change the URL location to www.spaxel.com after 3 seconds
+    setTimeout(() => {
+      window.location.href = 'https://www.spaxel.com';
+    }, 3000);
+  }
+  </script>
+</body>
+</html>
